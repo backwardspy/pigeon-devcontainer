@@ -1,33 +1,21 @@
-FROM debian:unstable
+FROM mcr.microsoft.com/vscode/devcontainers/base
 
-ARG USERNAME=dev
-ARG USER_UID=1000
-ARG USER_GID=$USER_UID
-
-ENV LANG=C.UTF-8
-
-RUN groupadd --gid ${USER_GID} ${USERNAME} \
-    && useradd --uid ${USER_UID} --gid ${USER_GID} -m ${USERNAME} \
-    && mkdir -p /etc/sudoers.d \
-    && echo "${USERNAME} ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/${USERNAME} \
-    && chmod 0440 /etc/sudoers.d/${USERNAME}
-
-RUN apt update && apt install -y \
-    curl \
+RUN apt update \
+    && apt install -y \
     direnv \
-    eza \
+    tar \
     fish \
-    git \
     git-lfs\
     neovim \
-    sudo \
-    vivid
+    && apt clean
 
-USER ${USERNAME}
-WORKDIR /home/${USERNAME}
+WORKDIR /home/vscode
+USER vscode
 
-COPY --chown=${USER_UID}:${USER_GID} config/ .config/
+RUN mkdir -p ~/.local/bin/ \
+    && curl -L https://github.com/eza-community/eza/releases/download/v0.19.3/eza_x86_64-unknown-linux-gnu.tar.gz -o eza.tar.gz \
+    && tar -xzf eza.tar.gz -C ~/.local/bin/ "./eza" \
+    && rm eza.tar.gz \
+    && curl -sS https://starship.rs/install.sh | sh -s -- --yes
 
-RUN curl -sS https://starship.rs/install.sh | sh -s -- --yes
-
-CMD ["fish"]
+COPY --chown=vscode:vscode config/ /home/vscode/.config/

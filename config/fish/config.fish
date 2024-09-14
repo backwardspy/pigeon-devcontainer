@@ -18,8 +18,6 @@ set -gx EDITOR nvim
 
 fish_add_path -g $CARGO_HOME/bin
 
-set -gx LS_COLORS (vivid generate catppuccin-latte)
-
 function eza --wraps eza
     command eza --icons --git --group-directories-first --hyperlink $argv
 end
