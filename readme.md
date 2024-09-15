@@ -6,7 +6,7 @@ if for some reason you *do*, try something like this:
 
 ```json
 {
-  "image": "ghcr.io/backwardspy/devcontainer:latest",
+  "image": "ghcr.io/backwardspy/pigeon-devcontainer:latest",
   // add whichever features you need
   "features": {
     "ghcr.io/devcontainers/features/python:1": {
